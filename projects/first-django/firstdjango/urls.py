@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('', include('first.urls')), # first 패키지 내에 있는 url를 참고한다
+    path('first/', include('first.urls')), # first 패키지 내에 있는 url를 참고한다
+    path('second/', include('second.urls')),
     path("admin/", admin.site.urls),
 ]
