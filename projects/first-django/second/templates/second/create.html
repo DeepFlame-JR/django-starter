@@ -7,7 +7,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/", method="post">
+    <form action="{% url 'confirm' %}", method="post">
         {% csrf_token %}
         {{ form }}
         <button type="submit">제출</button>
