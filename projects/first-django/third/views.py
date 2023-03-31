@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from third.models import Restaurant
 from django.core.paginator import Paginator
 from third.forms import RestaurantForm
@@ -23,8 +23,22 @@ def create(request):
     if request.method == 'POST':
         form = RestaurantForm(request.POST)
         if form.is_valid():
-            new_item = form.save()
+            new_item = form.save()  # pk가 없기 때문에 새롭게 저장됨
         return HttpResponseRedirect('/third/list/')
 
     form = RestaurantForm()
     return render(request, 'third/create.html', {'form':form})
+
+def update(request):
+    if request.method == 'POST' and 'id' in request.POST:  # 데이터 업데이트
+        # item = Restaurant.objects.get(pk=request.POST.get('id'))
+        item = get_object_or_404(Restaurant, pk=request.POST.get('id'))
+        form = RestaurantForm(request.POST, instance=item)  # pk를 지정할 수 있음
+        if form.is_valid():
+            item = form.save()  # pk가 지정되어 있기 때문에 데이터 업데이트
+    elif request.method == 'GET':  # 데이터 가져오기
+        # item = Restaurant.objects.get(pk=request.GET.get('id'))  # third/update?id=2
+        item = get_object_or_404(Restaurant, pk=request.GET.get('id'))
+        form = RestaurantForm(instance=item)
+        return render(request, 'third/update.html', {'form':form})
+    return HttpResponseRedirect('/third/list/')
