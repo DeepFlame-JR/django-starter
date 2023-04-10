@@ -71,3 +71,13 @@ def review_delete(request, restaurant_id, review_id):
     item.delete()
     return redirect('restaurant-detail', rid=restaurant_id)
     
+def review_list(request):
+    # select_related(): 관련된 정보를 모두 가져옴 (fk의 모든 내용을 가져옴)
+    # 따라서 쿼리를 여러번 실행할 것을 한번만 실행해 도됨
+    reviews = Review.objects.all().select_related().order_by('-created_at')  # 최신 순으로
+    paginator = Paginator(reviews, 10)
+    
+    page = request.GET.get('page')
+    items = paginator.get_page(page)
+    return render(request, 'third/review_list.html', {'reviews':items})
+    
