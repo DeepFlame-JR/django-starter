@@ -10,6 +10,7 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ item.name }}</h5>
                     <h6 class="card-subtitle">{{ item.address }}</h6>
+                    <p class="card-text">리뷰: {{ item.reviews_count }}개, 평균점수: {{ item.average_point }}점</p>
                     <p class="card-text">음식점 설명</p>
                     <a href="{% url 'restaurant-detail' rid=item.id %}" class="card-link">자세히 보기</a>
                     <a href="{% url 'restaurant-update' %}?id={{ item.id }}" class="card-link">수정하기</a>

@@ -3,10 +3,13 @@ from third.models import Restaurant, Review
 from django.core.paginator import Paginator
 from third.forms import RestaurantForm, ReviewForm
 from django.http import HttpResponseRedirect
+from django.db.models import Count, Avg
 
 # Create your views here.
 def list(request):
-    restaurants = Restaurant.objects.all()
+    # reviews_count 필드를 생성하고 계산한다
+    # Restaurant에는 Review를 정의하지 않았지만, relation이 설정되어 인식이 가능하다
+    restaurants = Restaurant.objects.all().annotate(reviews_count=Count('review')).annotate(average_point=Avg('review__point'))
     paginator = Paginator(restaurants, 5)
     
     # request에 페이지 이름이 부여됨 /third/list?page=1
