@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from third.models import Restaurant, Review
 from django.core.paginator import Paginator
-from third.forms import RestaurantForm, ReviewForm
+from third.forms import RestaurantForm, ReviewForm, UpdateRestaurantForm
 from django.http import HttpResponseRedirect
 from django.db.models import Count, Avg
 
@@ -36,8 +36,9 @@ def update(request):
     if request.method == 'POST' and 'id' in request.POST:  # 데이터 업데이트
         # item = Restaurant.objects.get(pk=request.POST.get('id'))
         item = get_object_or_404(Restaurant, pk=request.POST.get('id'))
-        form = RestaurantForm(request.POST, instance=item)  # pk를 지정할 수 있음
-        if form.is_valid():
+        password = request.POST.get('password','')  # 사용자에게서 가져온 password 값
+        form = UpdateRestaurantForm(request.POST, instance=item)  # pk를 지정할 수 있음
+        if form.is_valid() and password == item.password:
             item = form.save()  # pk가 지정되어 있기 때문에 데이터 업데이트
     elif request.method == 'GET':  # 데이터 가져오기
         # item = Restaurant.objects.get(pk=request.GET.get('id'))  # third/update?id=2
