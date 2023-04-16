@@ -54,11 +54,14 @@ def detail(request, rid):
         return render(request, 'third/detail.html', {'item':item, 'reviews':reviews})
     return HttpResponseRedirect('/third/list/')
 
-def delete(request):
-    if 'id' in request.GET:
-        item = get_object_or_404(Restaurant, pk=request.GET.get('id'))
-        item.delete()
-    return HttpResponseRedirect('/third/list/')
+def delete(request, id):
+    item = get_object_or_404(Restaurant, pk=id)
+    if request.method=='POST' and 'password' in request.POST:
+        if item.password == request.POST.get('password') or item.password is None:
+            item.delete()
+            return redirect('list')  # 삭제 성공
+        return redirect('restaurant-detail', id=id)  # 비밀번호가 틀려서 삭제 실패
+    return render(request, 'third/delete.html', {'item':item})  # GET
 
 def review_create(request, restaurant_id):
     if request.method == 'POST':
